@@ -1,0 +1,16 @@
+volumes:
+  pgdata:
+
+services:
+  database:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: incidents
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./01-ddl.sql:/docker-entrypoint-initdb.d/01-ddl.sql
+      - ./02-data.sql:/docker-entrypoint-initdb.d/02-data.sql
