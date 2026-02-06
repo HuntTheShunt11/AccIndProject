@@ -1,0 +1,31 @@
+form.filter-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 2rem;
+  align-items: end;
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 0.5rem 0.75rem;
+  align-items: center;
+}
+
+.actions {
+  grid-column: 1 / -1; /* bouton sur toute la largeur */
+}
+
+label {
+  min-width: 0; /* géré par la grille */
+}
+
+input, select {
+  min-width: 0; /* géré par la grille */
+  padding: 0.4rem 0.5rem;
+}
+
+button {
+  padding: 0.6rem 1.2rem;
+  font-weight: bold;
+}

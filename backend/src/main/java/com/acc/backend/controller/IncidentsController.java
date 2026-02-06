@@ -3,6 +3,7 @@ package com.acc.backend.controller;
 import com.acc.backend.dao.IncidentDao;
 import com.acc.backend.model.Incident;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,8 +31,8 @@ public class IncidentsController {
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Incident(s) found"),
-        @ApiResponse(responseCode = "404", description = "No incident found", content = @Content(schema = @Schema(hidden = true)))
     })
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/incidents")
     public ResponseEntity<List<Incident>> retrieveIncidents(
             @Parameter(description = "Incident title", example = "Incident a00a8cdbfec652ac2c5be3cc03aa2f3f") @RequestParam(value = "title", required = false) String title,
@@ -40,9 +41,6 @@ public class IncidentsController {
             @Parameter(description = "Owner info for the incident, it can be his last name, first name or email address", example = "John/Smith/john.smith@company.com") @RequestParam(value = "owner", required = false) String owner
     ) {
         List<Incident> incidents = incidentDao.searchIncidents(title, description, severity, owner);
-        if (incidents.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
         return ResponseEntity.ok(incidents);
     }
 

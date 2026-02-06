@@ -1,0 +1,30 @@
+@if (incidents.length) {
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Severity</th>
+        <th>Creation date</th>
+        <th>Owner last name</th>
+        <th>Owner first name</th>
+        <th>Owner email</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (incident of incidents; track incident.id) {
+        <tr>
+          <td>{{ incident.id }}</td>
+          <td>{{ incident.title }}</td>
+          <td>{{ incident.description }}</td>
+          <td>{{ incident.severity }}</td>
+          <td>{{ incident.createdAt | date:'short' }}</td>
+          <td>{{ incident.owner.lastName }}</td>
+          <td>{{ incident.owner.firstName }}</td>
+          <td>{{ incident.owner.email }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

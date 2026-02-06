@@ -114,11 +114,12 @@ class IncidentsControllerTest {
     }
 
     @Test
-    void testRetrieveIncidents_notFound() {
+    void testRetrieveIncidents_noResults() {
         when(incidentDao.searchIncidents("Unknown incident", null, null, null)).thenReturn(Collections.emptyList());
-        ResponseEntity<List<Incident>> response = incidentsController.retrieveIncidents("Incident inexistant", null, null, null);
-        assertEquals(404, response.getStatusCode().value());
-        assertNull(response.getBody());
+        ResponseEntity<List<Incident>> response = incidentsController.retrieveIncidents("Unknown incident", null, null, null);
+        assertEquals(200, response.getStatusCode().value());
+        assertNotNull(response.getBody());
+        assertEquals(0, response.getBody().size());
     }
 
     @Test

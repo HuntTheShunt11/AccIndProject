@@ -1,0 +1,30 @@
+<form [formGroup]="filterForm" (ngSubmit)="onSearch()" class="filter-grid">
+  <div class="field">
+    <label for="title">Title :</label>
+    <input id="title" formControlName="title" type="text" />
+  </div>
+
+  <div class="field">
+    <label for="description">Description :</label>
+    <input id="description" formControlName="description" type="text" />
+  </div>
+
+  <div class="field">
+    <label for="severity">Severity :</label>
+    <select id="severity" formControlName="severity">
+      <option value="">--</option>
+      <option value="LOW">Low</option>
+      <option value="MEDIUM">Medium</option>
+      <option value="HIGH">High</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="owner">Owner :</label>
+    <input id="owner" formControlName="owner" type="text" />
+  </div>
+
+  <div class="actions">
+    <button type="submit">Search</button>
+  </div>
+</form>
