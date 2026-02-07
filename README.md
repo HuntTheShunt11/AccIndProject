@@ -31,14 +31,19 @@ Pour lancer le backend, il suffit de se rendre dans le dossier `backend` et de l
 ```bash
 ./mvn spring-boot:run
 ```
+Une fois le backend lancé, il sera accessible à l'adresse `http://localhost:8080/`.
+
+Un swagger est également disponible à l'adresse `http://localhost:8080/swagger-ui/index.html` pour avoir la description de l'endpoint de l'API REST.
 
 ### Lancement du frontend
+
 Pour lancer le frontend, il suffit de se rendre dans le dossier `frontend` et de lancer la commande suivante :
 
 ```bash
 npm install
 ng serve
 ```
+Le frontend sera accessible à l'adresse `http://localhost:4200/` par défaut.
 
 ###  Nettoyage des données
 
