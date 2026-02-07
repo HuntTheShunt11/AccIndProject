@@ -1,13 +1,17 @@
 <main class="main">
   <div class="content content-vertical">
-    <h1>{{'title' | translate}}</h1>
+    <div class="lang-switcher">
+      <button type="button" (click)="useLang('fr')">FR</button>
+      <button type="button" (click)="useLang('en')">EN</button>
+    </div>
+    <h1>{{ 'title' | translate }}</h1>
     <app-filter (search)="onSearch($event)"></app-filter>
     <app-execution-time [time]="executionTime"></app-execution-time>
 
     @if (loading) {
       <div>{{'loading' | translate}}</div>
     } @else if (error) {
-      <div style="color: red;">{{ error }}</div>
+      <div style="color: red;">{{ error | translate }}</div>
     } @else {
       @if (incidents !== null && incidents.length === 0) {
         <div>{{'noResults' | translate}}</div>

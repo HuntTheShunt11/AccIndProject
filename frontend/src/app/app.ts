@@ -4,7 +4,7 @@ import { ApiService, Incident } from './api.service';
 import {ExecutionTimeComponent} from './components/execution-time/execution-time.component';
 import {FilterComponent} from './components/filter/filter.component';
 import {ResultsTableComponent} from './components/results-table/results-table.component';
-import {TranslatePipe} from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
 
 import { of } from 'rxjs';
@@ -12,7 +12,8 @@ import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ExecutionTimeComponent, FilterComponent, ResultsTableComponent, TranslatePipe],
+  standalone: true,
+  imports: [RouterOutlet, TranslateModule, ExecutionTimeComponent, FilterComponent, ResultsTableComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.html',
   styleUrls: ['./app.css']
@@ -24,7 +25,7 @@ export class App {
   loading = false;
   error: string | null = null;
 
-  constructor(private api: ApiService, private cdr :ChangeDetectorRef) {}
+  constructor(private api: ApiService, private cdr :ChangeDetectorRef, private translate: TranslateService) {}
 
   onSearch(filters: { title?: string; description?: string; severity?: string; owner?: string }) {
     this.loading = true;
@@ -33,7 +34,7 @@ export class App {
     this.api.searchIncidents(filters)
       .pipe(
         catchError((err) => {
-          this.error = 'Error while searching for results.';
+          this.error = 'error';
           return of([] as Incident[]);
         })
       )
@@ -43,5 +44,9 @@ export class App {
         this.loading = false;
         this.cdr.markForCheck();
       });
+  }
+
+  useLang(lang: string) {
+    this.translate.use(lang);
   }
 }
