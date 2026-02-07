@@ -1,12 +1,16 @@
 {
-  "title": "Search for incidents",
+  "pageTitle": "Search for incidents",
   "loading": "Loading...",
   "noResults": "No results",
   "error.generic": "Error while searching.",
-  "filters.title": "Title",
-  "filters.description": "Description",
-  "filters.severity": "Severity",
-  "filters.owner": "Owner",
+  "title": "Title",
+  "description": "Description",
+  "severity": "Severity",
+  "owner": "Owner",
+  "owner.lastName": "Owner last name",
+  "owner.firstName": "Owner first Name",
+  "owner.email": "Owner email",
+  "creationDate": "Creation date",
   "search": "Search",
   "error": "Error while searching for results!"
 }

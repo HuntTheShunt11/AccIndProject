@@ -1,12 +1,16 @@
 {
-  "title": "Recherche d'incidents",
+  "pageTitle": "Recherche d'incidents",
   "loading": "Chargement...",
   "noResults": "Aucun résultat",
   "error.generic": "Erreur lors de la recherche.",
-  "filters.title": "Titre",
-  "filters.description": "Description",
-  "filters.severity": "Sévérité",
-  "filters.owner": "Propriétaire",
+  "title": "Titre",
+  "description": "Description",
+  "severity": "Sévérité",
+  "owner": "Propriétaire",
+  "owner.lastName": "Nom du propriétaire",
+  "owner.firstName": "Prénom du propriétaire",
+  "owner.email": "Email du propriétaire",
+  "creationDate": "Creation date",
   "search": "Rechercher",
   "error" : "Erreur pendant la recherche de résultats!"
 }
