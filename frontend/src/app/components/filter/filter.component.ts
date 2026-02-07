@@ -1,11 +1,13 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-filter',
   templateUrl: './filter.component.html',
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslatePipe
   ],
   styleUrls: ['./filter.component.css']
 })

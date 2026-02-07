@@ -1,0 +1,12 @@
+{
+  "title": "Search for incidents",
+  "loading": "Loading...",
+  "noResults": "No results",
+  "error.generic": "Error while searching.",
+  "filters.title": "Title",
+  "filters.description": "Description",
+  "filters.severity": "Severity",
+  "filters.owner": "Owner",
+  "search": "Search"
+}
+

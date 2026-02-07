@@ -1,16 +1,16 @@
 <main class="main">
   <div class="content content-vertical">
-    <h1>Search for incidents</h1>
+    <h1>{{'title' | translate}}</h1>
     <app-filter (search)="onSearch($event)"></app-filter>
     <app-execution-time [time]="executionTime"></app-execution-time>
 
     @if (loading) {
-      <div>Loading...</div>
+      <div>{{'loading' | translate}}</div>
     } @else if (error) {
       <div style="color: red;">{{ error }}</div>
     } @else {
       @if (incidents !== null && incidents.length === 0) {
-        <div>No results</div>
+        <div>{{'noResults' | translate}}</div>
       } @else if (incidents && incidents.length > 0) {
         <div class="table-wrapper">
           <app-results-table [incidents]="incidents"></app-results-table>

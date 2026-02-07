@@ -1,0 +1,12 @@
+{
+  "title": "Recherche d'incidents",
+  "loading": "Chargement...",
+  "noResults": "Aucun résultat",
+  "error.generic": "Erreur lors de la recherche.",
+  "filters.title": "Titre",
+  "filters.description": "Description",
+  "filters.severity": "Sévérité",
+  "filters.owner": "Propriétaire",
+  "search": "Rechercher"
+}
+

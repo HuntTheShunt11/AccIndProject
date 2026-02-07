@@ -1,16 +1,16 @@
 <form [formGroup]="filterForm" (ngSubmit)="onSearch()" class="filter-grid">
   <div class="field">
-    <label for="title">Title :</label>
+    <label for="title">{{'filters.title' | translate}} :</label>
     <input id="title" formControlName="title" type="text" />
   </div>
 
   <div class="field">
-    <label for="description">Description :</label>
+    <label for="description">{{'filters.description' | translate}}  :</label>
     <input id="description" formControlName="description" type="text" />
   </div>
 
   <div class="field">
-    <label for="severity">Severity :</label>
+    <label for="severity">{{'filters.severity' | translate}}  :</label>
     <select id="severity" formControlName="severity">
       <option value="">--</option>
       <option value="LOW">Low</option>
@@ -20,11 +20,11 @@
   </div>
 
   <div class="field">
-    <label for="owner">Owner :</label>
+    <label for="owner">{{'filters.owner' | translate}}  :</label>
     <input id="owner" formControlName="owner" type="text" />
   </div>
 
   <div class="actions">
-    <button type="submit">Search</button>
+    <button type="submit">{{'search' | translate}} </button>
   </div>
 </form>

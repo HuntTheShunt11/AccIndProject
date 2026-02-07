@@ -4,12 +4,15 @@ import { ApiService, Incident } from './api.service';
 import {ExecutionTimeComponent} from './components/execution-time/execution-time.component';
 import {FilterComponent} from './components/filter/filter.component';
 import {ResultsTableComponent} from './components/results-table/results-table.component';
+import {TranslatePipe} from '@ngx-translate/core';
+
+
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ExecutionTimeComponent, FilterComponent, ResultsTableComponent],
+  imports: [RouterOutlet, ExecutionTimeComponent, FilterComponent, ResultsTableComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.html',
   styleUrls: ['./app.css']
