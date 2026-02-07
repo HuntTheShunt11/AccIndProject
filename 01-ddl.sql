@@ -17,3 +17,9 @@ CREATE TABLE incident (
 
 CREATE INDEX idx_person_id ON person(id);
 CREATE INDEX idx_incident_id ON incident(id);
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+CREATE INDEX idx_incident_trgm ON incident USING gin (title gin_trgm_ops, description gin_trgm_ops, severity gin_trgm_ops);
+CREATE INDEX idx_person_trgm ON person USING gin (last_name gin_trgm_ops, first_name gin_trgm_ops, email gin_trgm_ops);
+CREATE INDEX idx_incident_created_at ON incident(created_at DESC);
+CREATE INDEX idx_incident_owner_id ON incident(owner_id);

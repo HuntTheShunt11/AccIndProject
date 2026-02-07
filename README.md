@@ -52,3 +52,16 @@ Pour supprimer les données et les tables, il suffit de lancer la commande suiva
 ```bash
 docker compose down -v
 ```
+
+### Optimisations
+
+## Ajout d'index
+
+Comme notre requête de recherche utilise des filtres sur les colonnes de texte, l'ajout d'indexes GIN avec l'extension pg_trgm de PostgreSQL peut améliorer les performances de ces recherches. 
+Ce type d'index est optimisé pour les recherches sur des champs textes où l'on recherche une correspondance partielle sur ces derniers comme avec l'opérateur "LIKE" que nous utilisons dans notre requête.
+
+Deux indexes plus classiques de type B-Tree ont également été ajoutés sur l'owner_id de la table "Incident" pour optimiser les jointures entre les tables incidents et owners
+ainsi que sur la colonne 'created_at' de la même table pour optimiser le tri par date qui est fait dans la requête de notre webservice.
+
+Gain constaté : réduction du temps d'exécution de la requête de recherche de 1 à 0.5 secondes en moyenne suivant la taille de la requête.
+
