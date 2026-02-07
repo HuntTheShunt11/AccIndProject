@@ -30,6 +30,7 @@ export class App {
   onSearch(filters: { title?: string; description?: string; severity?: string; owner?: string }) {
     this.loading = true;
     this.error = null;
+    this.executionTime = null;
     const start = performance.now();
     this.api.searchIncidents(filters)
       .pipe(
