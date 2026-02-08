@@ -165,15 +165,6 @@ class IncidentsControllerTest {
         assertEquals(owner.getEmail(), response.getBody().getContent().get(0).getOwner().getEmail());
     }
 
-    @Test
-    void testRetrieveIncidents_pagination() {
-        Page<Incident> incidentPage = new PageImpl<>(Collections.nCopies(20, new Incident()));
-        Pageable expectedPageable = PageRequest.of(1, 20);
-        when(incidentDao.searchIncidents(isNull(), isNull(), isNull(), isNull(), eq(expectedPageable))).thenReturn(incidentPage);
-
-        incidentsController.retrieveIncidents(null, null, null, null, 1, 20);
-        verify(incidentDao).searchIncidents(isNull(), isNull(), isNull(), isNull(), eq(expectedPageable));
-    }
 
     @Test
     void testRetrieveIncidents_invalidPageSizeDefaultsTo10() {
@@ -201,6 +192,8 @@ class IncidentsControllerTest {
         when(incidentDao.searchIncidents(null, null, null, null, pageable)).thenReturn(incidentPage);
 
         ResponseEntity<Page<Incident>> response = incidentsController.retrieveIncidents(null, null, null, null, 1, 10);
+
+        verify(incidentDao).searchIncidents(null, null, null, null, pageable);
 
         assertEquals(200, response.getStatusCode().value());
         assertNotNull(response.getBody());
