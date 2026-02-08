@@ -16,6 +16,19 @@
       @if (incidents !== null && incidents.length === 0) {
         <div>{{'noResults' | translate}}</div>
       } @else if (incidents && incidents.length > 0) {
+        <div class="pagination-controls">
+          <span>Résultats par page:</span>
+          <select (change)="changeSize($any($event.target).value)">
+            <option [value]="10" [selected]="pageSize === 10">10</option>
+            <option [value]="20" [selected]="pageSize === 20">20</option>
+            <option [value]="50" [selected]="pageSize === 50">50</option>
+          </select>
+
+          <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 0">Précédent</button>
+          <span>Page {{ currentPage + 1 }} sur {{ totalPages }}</span>
+          <button (click)="changePage(currentPage + 1)" [disabled]="currentPage >= totalPages - 1">Suivant</button>
+          <span>({{ totalElements }} résultats)</span>
+        </div>
         <div class="table-wrapper">
           <app-results-table [incidents]="incidents"></app-results-table>
         </div>

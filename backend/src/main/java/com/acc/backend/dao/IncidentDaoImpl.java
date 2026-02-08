@@ -7,7 +7,17 @@ import org.springframework.stereotype.Repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import java.util.ArrayList;
+
 import java.util.List;
 
 @Repository
@@ -25,41 +35,60 @@ public class IncidentDaoImpl implements IncidentCustomRequests {
      * @param description The description of the incident to search for (optional).
      * @param severity The severity level of the incident to search for (optional).
      * @param owner The owner details (lastName, firstName, or email) to search for (optional).
-     * @return A list of incidents that match the search criteria.
+     * @param pageable The pagination information.
+     * @return A page of incidents that match the search criteria.
      */
     @Override
-    public List<Incident> searchIncidents(String title, String description, String severity, String owner) {
+    public Page<Incident> searchIncidents(String title, String description, String severity, String owner, Pageable pageable) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+        // --- Main query to retrieve the incidents ---
         CriteriaQuery<Incident> cq = cb.createQuery(Incident.class);
-        Root<Incident> incident = cq.from(Incident.class);
+        Root<Incident> incidentRoot = cq.from(Incident.class);
+        Join<Incident, Person> personJoin = incidentRoot.join(Incident.Fields.owner, JoinType.INNER);
 
-        // Join with the Person entity to filter by owner details (lastName, firstName, email)
-        Join<Object, Object> person = incident.join(Incident.Fields.owner, JoinType.INNER);
+        List<Predicate> predicates = getPredicates(cb, incidentRoot, personJoin, title, description, severity, owner);
 
-        Predicate predicate = cb.conjunction();
-        // Add filters if they are present
+        cq.where(predicates);
+        cq.orderBy(cb.desc(incidentRoot.get(Incident.Fields.createdAt)));
+
+        TypedQuery<Incident> query = entityManager.createQuery(cq);
+        query.setFirstResult((int) pageable.getOffset());
+        query.setMaxResults(pageable.getPageSize());
+        List<Incident> incidents = query.getResultList();
+
+        // --- Count query for the pagination ---
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<Incident> countRoot = countQuery.from(Incident.class);
+        Join<Incident, Person> countPersonJoin = countRoot.join(Incident.Fields.owner, JoinType.INNER);
+        countQuery.select(cb.count(countRoot));
+
+        List<Predicate> countPredicates = getPredicates(cb, countRoot, countPersonJoin, title, description, severity, owner);
+        countQuery.where(countPredicates);
+
+        Long totalResults = entityManager.createQuery(countQuery).getSingleResult();
+
+        return new PageImpl<>(incidents, pageable, totalResults);
+    }
+
+    private List<Predicate> getPredicates(CriteriaBuilder cb, Root<Incident> root, Join<Incident, Person> join, String title, String description, String severity, String owner) {
+        List<Predicate> predicates = new ArrayList<>();
         if (title != null && !title.isEmpty()) {
-            predicate = cb.and(predicate, cb.like(cb.lower(incident.get(Incident.Fields.title)), PERCENT_SIGN + title.toLowerCase() + PERCENT_SIGN));
+            predicates.add(cb.like(cb.lower(root.get(Incident.Fields.title)), PERCENT_SIGN + title.toLowerCase() + PERCENT_SIGN));
         }
         if (description != null && !description.isEmpty()) {
-            predicate = cb.and(predicate, cb.like(cb.lower(incident.get(Incident.Fields.description)), PERCENT_SIGN + description.toLowerCase() + PERCENT_SIGN));
+            predicates.add(cb.like(cb.lower(root.get(Incident.Fields.description)), PERCENT_SIGN + description.toLowerCase() + PERCENT_SIGN));
         }
         if (severity != null && !severity.isEmpty()) {
-            predicate = cb.and(predicate, cb.like(cb.lower(incident.get(Incident.Fields.severity)), PERCENT_SIGN + severity.toLowerCase() + PERCENT_SIGN));
+            predicates.add(cb.like(cb.lower(root.get(Incident.Fields.severity)), PERCENT_SIGN + severity.toLowerCase() + PERCENT_SIGN));
         }
         if (owner != null && !owner.isEmpty()) {
-            Predicate ownerPred = cb.or(
-                cb.like(cb.lower(person.get(Person.Fields.lastName)), PERCENT_SIGN + owner.toLowerCase() + PERCENT_SIGN),
-                cb.like(cb.lower(person.get(Person.Fields.firstName)), PERCENT_SIGN + owner.toLowerCase() + PERCENT_SIGN),
-                cb.like(cb.lower(person.get(Person.Fields.email)), PERCENT_SIGN + owner.toLowerCase() + PERCENT_SIGN)
-            );
-            predicate = cb.and(predicate, ownerPred);
+            predicates.add(cb.or(
+                cb.like(cb.lower(join.get(Person.Fields.lastName)), PERCENT_SIGN + owner.toLowerCase() + PERCENT_SIGN),
+                cb.like(cb.lower(join.get(Person.Fields.firstName)), PERCENT_SIGN + owner.toLowerCase() + PERCENT_SIGN),
+                cb.like(cb.lower(join.get(Person.Fields.email)), PERCENT_SIGN + owner.toLowerCase() + PERCENT_SIGN)
+            ));
         }
-        cq.where(predicate);
-
-        // Order incidents by createdAt in descending order
-        cq.orderBy(cb.desc(incident.get(Incident.Fields.createdAt)));
-        TypedQuery<Incident> query = entityManager.createQuery(cq);
-        return query.getResultList();
+        return predicates;
     }
 }

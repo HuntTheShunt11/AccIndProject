@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 export interface Person {
@@ -10,12 +10,20 @@ export interface Person {
 }
 
 export interface Incident {
-  id: number;
+  id: string;
   title: string;
   description: string;
   severity: string;
   createdAt: string;
   owner: Person;
+}
+
+export interface Page<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number; // Current page number
 }
 
 @Injectable({ providedIn: 'root' })
@@ -24,17 +32,21 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  searchIncidents(filters: {
-    title?: string;
-    description?: string;
-    severity?: string;
-    owner?: string;
-  }): Observable<Incident[]> {
-    let params = new HttpParams();
-    if (filters.title) params = params.set('title', filters.title);
-    if (filters.description) params = params.set('description', filters.description);
-    if (filters.severity) params = params.set('severity', filters.severity);
-    if (filters.owner) params = params.set('owner', filters.owner);
-    return this.http.get<Incident[]>(this.baseUrl, { params });
+  searchIncidents(
+    filters: { title?: string; description?: string; severity?: string; owner?: string },
+    page = 0,
+    size = 10
+  ): Observable<Page<Incident>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) {
+        params = params.set(key, value);
+      }
+    });
+
+    return this.http.get<Page<Incident>>(this.baseUrl, { params });
   }
 }

@@ -65,3 +65,12 @@ ainsi que sur la colonne 'created_at' de la même table pour optimiser le tri pa
 
 Gain constaté : réduction du temps d'exécution de la requête de recherche de 1 à 0.5 secondes en moyenne suivant la taille de la requête.
 
+## Pagination
+
+L'ajout d'une pagination permet de limiter le nombre de résultats retournés par la requête, ce qui peut réduire considérablement le temps d'exécution de la requête, surtout lorsque le nombre de résultats est important.
+
+Ainsi l'utilisateur parcourt les résulats petit à petit au lieu de récupérer les potentiels 100 000 résultats en un seul appel,
+ce qui rend la requête plus rapide et le rendu des résulats côté client également.
+
+La pagination a été limitée à 10, 20 ou 50 résultats par page de façon arbitraire.
+Gain constaté : réduction du temps d'exécution de la requête de recherche de 0.2 à 1,4 secondes en moyenne par rapport à la version sans pagination, en fonction du nombre de résultats retournés.

@@ -1,6 +1,6 @@
 import {Component, signal, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ApiService, Incident } from './api.service';
+import { ApiService, Incident, Page } from './api.service';
 import {ExecutionTimeComponent} from './components/execution-time/execution-time.component';
 import {FilterComponent} from './components/filter/filter.component';
 import {ResultsTableComponent} from './components/results-table/results-table.component';
@@ -25,26 +25,59 @@ export class App {
   loading = false;
   error: string | null = null;
 
+  // Pagination state
+  currentPage = 0;
+  pageSize = 10;
+  totalElements = 0;
+  totalPages = 0;
+  currentFilters: { title?: string; description?: string; severity?: string; owner?: string } = {};
+
   constructor(private api: ApiService, private cdr :ChangeDetectorRef, private translate: TranslateService) {}
 
   onSearch(filters: { title?: string; description?: string; severity?: string; owner?: string }) {
+    this.currentFilters = filters;
+    this.currentPage = 0; // Reset to first page on new search
+    this.fetchIncidents();
+  }
+
+  fetchIncidents() {
     this.loading = true;
     this.error = null;
-    this.executionTime = null;
     const start = performance.now();
-    this.api.searchIncidents(filters)
+
+    this.api.searchIncidents(this.currentFilters, this.currentPage, this.pageSize)
       .pipe(
         catchError((err) => {
-          this.error = 'error';
-          return of([] as Incident[]);
+          if (err && err.status === 404) {
+            this.error = null;
+            return of({ content: [], totalElements: 0, totalPages: 0, size: this.pageSize, number: 0 } as Page<Incident>);
+          }
+          this.error = 'error.generic';
+          return of({ content: [], totalElements: 0, totalPages: 0, size: this.pageSize, number: 0 } as Page<Incident>);
         })
       )
-      .subscribe((results) => {
-        this.incidents = Array.isArray(results) ? [...results] : [];
+      .subscribe((page) => {
+        this.incidents = page.content;
+        this.totalElements = page.totalElements;
+        this.totalPages = page.totalPages;
+        this.currentPage = page.number;
         this.executionTime = (performance.now() - start) / 1000;
         this.loading = false;
         this.cdr.markForCheck();
       });
+  }
+
+  changePage(page: number) {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.fetchIncidents();
+    }
+  }
+
+  changeSize(size: number) {
+    this.pageSize = size;
+    this.currentPage = 0; // Reset to first page on size change
+    this.fetchIncidents();
   }
 
   useLang(lang: string) {

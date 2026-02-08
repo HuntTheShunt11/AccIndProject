@@ -38,6 +38,13 @@ main {
   gap: 0.5rem;
 }
 
+.pagination-controls{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
 .content {
   display: flex;
   justify-content: flex-start;
