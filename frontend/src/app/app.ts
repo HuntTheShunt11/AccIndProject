@@ -1,6 +1,6 @@
 import {Component, signal, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ApiService, Incident, Page } from './api.service';
+import { ApiService, Incident, Response } from './api.service';
 import {ExecutionTimeComponent} from './components/execution-time/execution-time.component';
 import {FilterComponent} from './components/filter/filter.component';
 import {ResultsTableComponent} from './components/results-table/results-table.component';
@@ -48,19 +48,15 @@ export class App {
     this.api.searchIncidents(this.currentFilters, this.currentPage, this.pageSize)
       .pipe(
         catchError((err) => {
-          if (err && err.status === 404) {
-            this.error = null;
-            return of({ content: [], totalElements: 0, totalPages: 0, size: this.pageSize, number: 0 } as Page<Incident>);
-          }
           this.error = 'error.generic';
-          return of({ content: [], totalElements: 0, totalPages: 0, size: this.pageSize, number: 0 } as Page<Incident>);
+          return of({ content: [], page: { size: this.pageSize, number: 0, totalElements: 0, totalPages: 0 } } as Response<Incident>);
         })
       )
       .subscribe((page) => {
         this.incidents = page.content;
-        this.totalElements = page.totalElements;
-        this.totalPages = page.totalPages;
-        this.currentPage = page.number;
+        this.totalElements = page.page.totalElements;
+        this.totalPages = page.page.totalPages;
+        this.currentPage = page.page.number;
         this.executionTime = (performance.now() - start) / 1000;
         this.loading = false;
         this.cdr.markForCheck();

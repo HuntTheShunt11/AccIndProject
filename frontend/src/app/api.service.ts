@@ -18,12 +18,14 @@ export interface Incident {
   owner: Person;
 }
 
-export interface Page<T> {
+export interface Response<T> {
   content: T[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number; // Current page number
+  page: {
+    size: number;
+    number: number;
+    totalElements: number;
+    totalPages: number;
+  };
 }
 
 @Injectable({ providedIn: 'root' })
@@ -36,7 +38,7 @@ export class ApiService {
     filters: { title?: string; description?: string; severity?: string; owner?: string },
     page = 0,
     size = 10
-  ): Observable<Page<Incident>> {
+  ): Observable<Response<Incident>> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
@@ -47,6 +49,6 @@ export class ApiService {
       }
     });
 
-    return this.http.get<Page<Incident>>(this.baseUrl, { params });
+    return this.http.get<Response<Incident>>(this.baseUrl, { params });
   }
 }

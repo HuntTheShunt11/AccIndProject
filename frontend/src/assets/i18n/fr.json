@@ -12,6 +12,7 @@
   "owner.email": "Email du propriétaire",
   "creationDate": "Creation date",
   "search": "Rechercher",
-  "error" : "Erreur pendant la recherche de résultats!"
+  "error" : "Erreur pendant la recherche de résultats!",
+  "executionTime": "Temps d'exécution"
 }
 

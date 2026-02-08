@@ -12,6 +12,7 @@
   "owner.email": "Owner email",
   "creationDate": "Creation date",
   "search": "Search",
-  "error": "Error while searching for results!"
+  "error": "Error while searching for results!",
+  "executionTime": "Execution time"
 }
 
